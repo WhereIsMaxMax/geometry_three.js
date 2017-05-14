@@ -18,7 +18,7 @@
 
     var scene, camera, renderer, stats, controls;
     var counter = 0, sphereCounter = 0, ringCounter = 0;
-    var maxRadius = 3, radius = 0, circleRadius = 1;
+    var radius = 0, ringRadius = 20;
 
     initThree();
     console.log(camera.position);
@@ -112,7 +112,7 @@
     }
 
     function addSphere(){
-        var sphereGeometry = new THREE.SphereGeometry (maxRadius, 20, 25);
+        var sphereGeometry = new THREE.SphereGeometry (radius, 20, 25);
         var sphereMaterial = new THREE.MeshLambertMaterial({color:  Math.random() * 0xffffff, wireframe: true });
         var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
         // var centerSphere = new THREE.Vector3( 0, 0, 0 );
@@ -120,16 +120,13 @@
         sphere.name = "spherePlayer"+sphereCounter;
         scene.add(sphere);
         sphere.geometry.dynamic = true;
-        sphereCounter++;
-        maxRadius+=5;
         return sphere;
     }
 
     function addRing(){
-        var ringGeometry = new THREE.RingGeometry(circleRadius, circleRadius+0.2, 100);
+        var ringGeometry = new THREE.RingGeometry(ringRadius, ringRadius+0.2, 100);
         var ringMaterial = new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff, wireframe: true });
         var ring = new THREE.Mesh(ringGeometry, ringMaterial);
-        circleRadius+=3;
         ring.name = "ring"+ringCounter;
         ringCounter++;
         ring.geometry.dynamic = true;
@@ -147,7 +144,7 @@
             sum	+= dataArray[i];
         }
         var amplitude	= sum / (width*256-1);
-        radius = 1 + amplitude*3;
+        radius = 0.1 + amplitude;
 
         // for (var i = 0; i < this.analyser.frequencyBinCount; i++) {
         //     var value = freqs[i];
