@@ -46,9 +46,10 @@ var AudioBufferCreator = function (context) {
     var bufferLength = analyser.frequencyBinCount;
     dataArray = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(dataArray);
-    return dataArray
-};
 
-// var getBuffer = function () {
-//     return dataArray;
-// };
+    function getBuffer() {
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(dataArray);
+        return dataArray;
+    }
+};

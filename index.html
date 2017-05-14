@@ -10,9 +10,9 @@
 <script src="three.min.js"></script>
 <script type="text/javascript" language="JavaScript1.5" src="https://rawgit.com/Vasilui/habrahabr/master/WebGL_Three.js/libs/stats.js"></script>
 <script type="text/javascript" language="JavaScript1.5" src="https://rawgit.com/Vasilui/habrahabr/master/WebGL_Three.js/libs/dat.gui.js"></script>
-<script type="text/javascript" src="jquery-1.8.0.min.js"></script>
-<script src="TrackballControls.js"></script>
-<script src="webaudiox.js"></script>
+<script src="scripts/TrackballControls.js"></script>
+<script src="scripts/AudioBufferCreator.js"></script>
+<script src="scripts/webaudiox.js"></script>
 <div id="WebGL-output"></div>
 <script>
 
@@ -24,55 +24,15 @@
     initThree();
 
     // console.log(camera.position);
+
     var context = new AudioContext();
-    analyser = context.createAnalyser();
-    analyser.connect(context.destination);
-    var audioBuffer;
-    var sourceNode;
-    // load the sound
-    // create a buffer source node
-    sourceNode = context.createBufferSource();
-    // and connect to destination
-    sourceNode.connect(context.destination);
-    sourceNode.connect(analyser);
-    loadSound("song.mp3");
-    // load the specified sound
-    function loadSound(url) {
-        var request = new XMLHttpRequest();
-        request.open('GET', url, true);
-        request.responseType = 'arraybuffer';
-        // When loaded decode the data
-        request.onload = function() {
-            // decode the data
-            context.decodeAudioData(request.response, function(buffer) {
-                // when the audio is decoded play the sound
-                // playSound(buffer);
-            }, onError);
-        }
-        request.send();
-    }
-    function playSound(buffer) {
-        sourceNode.buffer = buffer;
-        sourceNode.start(0);
-    }
-    // log if an error occurs
-    function onError(e) {
-        console.log(e);
-    }
 
+    audioBufferCreator = new AudioBufferCreator(context);
 
-    var freqs = new Uint8Array(this.analyser.frequencyBinCount);
-    var times = new Uint8Array(this.analyser.frequencyBinCount);
-    // fFrequencyData = new Float32Array(analyser.frequencyBinCount);
-    // bFrequencyData = new Uint8Array(analyser.frequencyBinCount);
-    // bTimeData = new Uint8Array(analyser.frequencyBinCount);
-    // // Получаем данные
-    // analyser.getFloatFrequencyData(fFrequencyData);
-    // analyser.getByteFrequencyData(bFrequencyData);
-    // analyser.getByteTimeDomainData(bTimeData);
-    // var bufferLength = analyser.frequencyBinCount;
-    // var dataArray = new Uint8Array(analyser.frequencyBinCount);
-    // analyser.getByteFrequencyData(dataArray);
+    str = JSON.stringify( new AudioBufferCreator(context), null, 4);
+    console.log("LOOK AT ME"+str);
+
+    render();
 
     function initThree() {
         scene = new THREE.Scene();
@@ -191,17 +151,13 @@
         scene.add (ring);
     }
 
-    var render = function () {
+    function render () {
         renderer.render(scene, camera);
         requestAnimationFrame( render );
 
 
         // radius= 1 + analyser2volume.smoothedValue() * maxRadius
-
-        var dataArray = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteFrequencyData(dataArray);
-
-
+        dataArray = audioBufferCreator.getBuffer();
         var width = dataArray.length;
         var sum = 0;
         for(var i = 0; i < width; i++){
@@ -253,9 +209,6 @@
         stats.update();
         controls.update();
     }
-
-    render();
-
 
 </script>
 </body>
