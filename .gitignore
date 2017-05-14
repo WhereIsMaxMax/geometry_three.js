@@ -38,4 +38,4 @@ jspm_packages
 
 # common
 .idea/
-node_modules
+.node_modules

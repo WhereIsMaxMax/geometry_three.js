@@ -16,22 +16,14 @@
 <div id="WebGL-output"></div>
 <script>
 
-    var controls1, scene, camera, renderer, stats, container, controls;
+    var scene, camera, renderer, stats, controls;
     var counter = 0, sphereCounter = 0, ringCounter = 0;
-
     var maxRadius = 3, radius = 0, circleRadius = 1;
 
     initThree();
-
-    // console.log(camera.position);
-
+    console.log(camera.position);
     var context = new AudioContext();
-
     audioBufferCreator = new AudioBufferCreator(context);
-
-    str = JSON.stringify( new AudioBufferCreator(context), null, 4);
-    console.log("LOOK AT ME"+str);
-
     render();
 
     function initThree() {
@@ -45,10 +37,6 @@
 
         controls.staticMoving = true;
         controls.dynamicDampingFactor = 0.3;
-
-        // ERROR
-        // controls.keys = [ 65, 83, 68 ];
-        // controls.addEventListener( 'change', render );
 
         renderer = new THREE.WebGLRenderer({ antialias: false } );
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -70,8 +58,22 @@
         spotLightBack.castShadow = true;
         scene.add( spotLightBack );
 
-        camera.position.set (0, 0, 60);
+        camera.position.set(0, 0, 60);
         camera.lookAt(scene.position);
+
+        stats = new Stats();
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.top = '0px';
+        stats.domElement.style.zIndex = 100;
+        document.body.appendChild( stats.domElement );
+
+        // var gui = new dat.GUI();
+        // gui.add(controls, 'rotationSpeed',0,0.5);
+        // gui.add(controls, 'addCube');
+        // gui.add(controls, 'removeCube');
+        // gui.add(controls, 'outputObjects');
+        // gui.add(controls, 'numberOfObjects').listen();
+
 
         //         this.removeCube = function() {
         //       var allChildren = scene.children;
@@ -88,24 +90,7 @@
         //         }
         //     }
 
-        stats = new Stats();
-        stats.domElement.style.position = 'absolute';
-        stats.domElement.style.top = '0px';
-        stats.domElement.style.zIndex = 100;
-        document.body.appendChild( stats.domElement );
-
-        // var gui = new dat.GUI();
-        // gui.add(controls, 'rotationSpeed',0,0.5);
-        // gui.add(controls, 'addCube');
-        // gui.add(controls, 'removeCube');
-        // gui.add(controls, 'outputObjects');
-        // gui.add(controls, 'numberOfObjects').listen();
-
-
-        for(i=0;i<3;i++){
-            addRing();
-        }
-        addSphere();
+        var sphere = addSphere();
     }
 
     function addCube() {
@@ -115,7 +100,6 @@
         var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
         cube.castShadow = true;
         cube.name = "cube-" + scene.children.length;
-
 
         // position the cube randomly in the scene
         cube.position.x= Math.random()*2-1;
@@ -138,6 +122,7 @@
         sphere.geometry.dynamic = true;
         sphereCounter++;
         maxRadius+=5;
+        return sphere;
     }
 
     function addRing(){
@@ -155,18 +140,14 @@
         renderer.render(scene, camera);
         requestAnimationFrame( render );
 
-
-        // radius= 1 + analyser2volume.smoothedValue() * maxRadius
         dataArray = audioBufferCreator.getBuffer();
         var width = dataArray.length;
         var sum = 0;
         for(var i = 0; i < width; i++){
             sum	+= dataArray[i];
         }
-        // complute the amplitude
         var amplitude	= sum / (width*256-1);
         radius = 1 + amplitude*3;
-        // sphere.material.color.setHex(  Math.random() * 0xffffff, Math.random() * 0xffffff, Math.random() * 0xffffff);
 
         // for (var i = 0; i < this.analyser.frequencyBinCount; i++) {
         //     var value = freqs[i];
@@ -184,6 +165,7 @@
         scene.traverse(function(e) {
             if (e.name.substring(0,4) === "sphe") {
                 e.scale.set (radius, radius, radius);
+                e.material.color.setHex(  Math.random() * 0xffffff, Math.random() * 0xffffff, Math.random() * 0xffffff);
             }
             if (e.name.substring(0,4) === "cube") {
                 e.rotation.x+=0.1;

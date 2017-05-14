@@ -1,15 +1,24 @@
 var AudioBufferCreator = function (context) {
-    var analyser = context.createAnalyser();
+    analyser = context.createAnalyser();
     analyser.connect(context.destination);
-// load the sound
-// create a buffer source node
-    var audioBuffer;
-    var sourceNode = context.createBufferSource();
-// and connect to destination
+    sourceNode = context.createBufferSource();
     sourceNode.connect(context.destination);
     sourceNode.connect(analyser);
-    loadSound("song.mp3");
-// load the specified sound
+
+    loadSound("res/2.mp3");
+
+    fFrequencyData = new Float32Array(analyser.frequencyBinCount);
+    bFrequencyData = new Uint8Array(analyser.frequencyBinCount);
+    bTimeData = new Uint8Array(analyser.frequencyBinCount);
+    // Получаем данные
+    analyser.getFloatFrequencyData(fFrequencyData);
+    analyser.getByteFrequencyData(bFrequencyData);
+    analyser.getByteTimeDomainData(bTimeData);
+
+    bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(dataArray);
+
     function loadSound(url) {
         var request = new XMLHttpRequest();
         request.open('GET', url, true);
@@ -32,22 +41,7 @@ var AudioBufferCreator = function (context) {
     function onError(e) {
         console.log(e);
     }
-
-    // var freqs = new Uint8Array(this.analyser.frequencyBinCount);
-    // var times = new Uint8Array(this.analyser.frequencyBinCount);
-
-    fFrequencyData = new Float32Array(analyser.frequencyBinCount);
-    bFrequencyData = new Uint8Array(analyser.frequencyBinCount);
-    bTimeData = new Uint8Array(analyser.frequencyBinCount);
-    // Получаем данные
-    analyser.getFloatFrequencyData(fFrequencyData);
-    analyser.getByteFrequencyData(bFrequencyData);
-    analyser.getByteTimeDomainData(bTimeData);
-    var bufferLength = analyser.frequencyBinCount;
-    dataArray = new Uint8Array(analyser.frequencyBinCount);
-    analyser.getByteFrequencyData(dataArray);
-
-    function getBuffer() {
+    this.getBuffer = function(){
         dataArray = new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(dataArray);
         return dataArray;
