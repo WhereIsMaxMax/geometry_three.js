@@ -1,0 +1,172 @@
+var scene, camera, renderer, stats, controls;
+var counter = 0, sphereCounter = 0, ringCounter = 0;
+var radius = 0, ringRadius = 20;
+
+initThree();
+var context = new AudioContext();
+audioBufferCreator = new AudioBufferCreator(context);
+render();
+
+function initThree() {
+	scene = new THREE.Scene();
+	camera = new THREE.PerspectiveCamera( 75,
+	    window.innerWidth/window.innerHeight, 0.1, 1000 );
+	controls = new THREE.TrackballControls( camera );
+
+	controls.noZoom = false;
+	controls.noPan = false;
+
+	controls.staticMoving = true;
+	controls.dynamicDampingFactor = 0.3;
+
+	renderer = new THREE.WebGLRenderer({ antialias: false } );
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.body.appendChild( renderer.domElement );
+
+	var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+	scene.add(ambientLight);
+
+	// var axisHelper = new THREE.AxisHelper( 5 );
+	// scene.add( axisHelper );
+
+	var spotLight = new THREE.SpotLight( 0xffffff );
+	spotLight.position.set( 0, 0, 270 );
+	spotLight.castShadow = true;
+	scene.add( spotLight );
+
+	var spotLightBack = new THREE.SpotLight( 0xffffff );
+	spotLightBack.position.set( 0, 0, -270 );
+	spotLightBack.castShadow = true;
+	scene.add( spotLightBack );
+
+	camera.position.set(0, 0, 60);
+	camera.lookAt(scene.position);
+
+	stats = new Stats();
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.top = '0px';
+	stats.domElement.style.zIndex = 100;
+	document.body.appendChild( stats.domElement );
+
+  // var gui = new dat.GUI();
+  // gui.add(controls, 'rotationSpeed',0,0.5);
+  // gui.add(controls, 'addCube');
+  // gui.add(controls, 'removeCube');
+  // gui.add(controls, 'outputObjects');
+  // gui.add(controls, 'numberOfObjects').listen();
+
+
+  //         this.removeCube = function() {
+  //       var allChildren = scene.children;
+  //    			var lastObject = allChildren[allChildren.length-1];
+  //             if (lastObject instanceof THREE.Mesh) {
+  //                 scene.remove(lastObject);
+  //                 this.numberOfObjects = scene.children.length;
+  //             }
+  //         }
+
+
+  //         this.outputObjects = function() {
+  //             console.log(scene.children);
+  //         }
+  //     }
+
+  var sphere = addSphere();
+}
+
+function addCube() {
+  var cubeSize = Math.ceil((Math.random() * 3));
+  var cubeGeometry = new THREE.BoxGeometry(cubeSize,cubeSize,cubeSize);
+  var cubeMaterial = new THREE.MeshLambertMaterial({color:  Math.random() * 0xffffff });
+  var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+  cube.castShadow = true;
+  cube.name = "cube-" + scene.children.length;
+
+  // position the cube randomly in the scene
+  cube.position.x= Math.random()*2-1;
+  cube.position.y= Math.random()*2-1;
+  cube.position.z= Math.random()*2-1;
+
+  // add the cube to the scene
+  scene.add(cube);
+  this.numberOfObjects = scene.children.length;
+}
+
+function addSphere(){
+  var sphereGeometry = new THREE.SphereGeometry (radius, 20, 25);
+  var sphereMaterial = new THREE.MeshLambertMaterial({color:  Math.random() * 0xffffff, wireframe: true });
+  var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+  // var centerSphere = new THREE.Vector3( 0, 0, 0 );
+  sphere.castShadow = true;
+  sphere.name = "spherePlayer"+sphereCounter;
+  scene.add(sphere);
+  sphere.geometry.dynamic = true;
+  return sphere;
+}
+
+function addRing(){
+  var ringGeometry = new THREE.RingGeometry(ringRadius, ringRadius+0.2, 100);
+  var ringMaterial = new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff, wireframe: true });
+  var ring = new THREE.Mesh(ringGeometry, ringMaterial);
+  ring.name = "ring"+ringCounter;
+  ringCounter++;
+  ring.geometry.dynamic = true;
+  scene.add (ring);
+}
+
+function render () {
+  renderer.render(scene, camera);
+  requestAnimationFrame( render );
+
+  dataArray = audioBufferCreator.getBuffer();
+  var width = dataArray.length;
+  var sum = 0;
+  for(var i = 0; i < width; i++){
+      sum	+= dataArray[i];
+  }
+  var amplitude	= sum / (width*256-1);
+  radius = 0.1 + amplitude;
+
+  // for (var i = 0; i < this.analyser.frequencyBinCount; i++) {
+  //     var value = freqs[i];
+  //     var percent = value / 256;
+  //     var height = 30 * percent;
+  //     var offset = 30 - height - 1;
+  //     var barWidth = 25/this.analyser.frequencyBinCount;
+  //     var hue = i/this.analyser.frequencyBinCount * 360;
+  //     drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
+  //     drawContext.fillRect(i * barWidth, offset, barWidth, height);
+  //   }
+
+  // Moving objects
+	console.log(dataArray);
+  counter+=1 ;
+  scene.traverse(function(e) {
+      if (e.name.substring(0,4) === "sphe") {
+          e.scale.set (radius, radius, radius);
+          e.material.color.setHex(  Math.random() * 0xffffff, Math.random() * 0xffffff, Math.random() * 0xffffff);
+      }
+      if (e.name.substring(0,4) === "cube") {
+          e.rotation.x+=0.1;
+          e.rotation.y+=0.1;
+
+          e.position.z+=e.position.z/30;
+          e.position.x+=e.position.x/30;
+          e.position.y+=e.position.y/30;
+
+          if ((e.position.z>60||e.position.z<-60)||(e.position.x>60||e.position.x<-60)||(e.position.y>60||e.position.y<-60)){
+              scene.remove (e);
+              // renderer.deallocateObject( e );
+          }
+      }
+  });
+
+  if (scene.children.length<70){
+      if(counter%10==0){
+          addCube();
+      }
+  }
+
+  stats.update();
+  controls.update();
+}
