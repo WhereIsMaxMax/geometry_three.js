@@ -48,29 +48,6 @@ function initThree() {
 	stats.domElement.style.zIndex = 100;
 	document.body.appendChild( stats.domElement );
 
-  // var gui = new dat.GUI();
-  // gui.add(controls, 'rotationSpeed',0,0.5);
-  // gui.add(controls, 'addCube');
-  // gui.add(controls, 'removeCube');
-  // gui.add(controls, 'outputObjects');
-  // gui.add(controls, 'numberOfObjects').listen();
-
-
-  //         this.removeCube = function() {
-  //       var allChildren = scene.children;
-  //    			var lastObject = allChildren[allChildren.length-1];
-  //             if (lastObject instanceof THREE.Mesh) {
-  //                 scene.remove(lastObject);
-  //                 this.numberOfObjects = scene.children.length;
-  //             }
-  //         }
-
-
-  //         this.outputObjects = function() {
-  //             console.log(scene.children);
-  //         }
-  //     }
-
   var sphere = addSphere();
 
   var lines = [];
