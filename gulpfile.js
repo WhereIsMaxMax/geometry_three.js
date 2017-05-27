@@ -1,9 +1,6 @@
 var gulp = require('gulp');
 var	watch = require('gulp-watch');
 var	connect = require('gulp-connect');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-
 
 gulp.task('connect', function() { 
 	connect.server({
@@ -19,21 +16,20 @@ gulp.task('html', function() {
 });
 
 gulp.task('css', function() {
-	gulp.src('css/*.css')
+	gulp.src('assets/css/*.css')
 		.pipe(connect.reload())
+});
+
+gulp.task('js', function(){
+  gulp.src('assets/js/*.js')
+    .pipe(connect.reload())
 });
 
 gulp.task('watch', function () {
   gulp.watch(['*.html'], ['html']);
-  gulp.watch(['css/*.css'], ['css']);
+  gulp.watch(['assets/css/*.css'], ['css']);
+  gulp.watch(['assets/js/*.js'], ['js']);
 });
 
-// gulp.task('scripts', function(){
-//     return gulp.src('scripts/*.js')
-//         .pipe(concat('main.js'))
-//         .pipe(uglify())
-//         .pipe(gulp.dest('scripts/'))
-// });
-
-gulp.task('default', ['connect', 'watch', 'css', 'html']);
+gulp.task('default', ['connect', 'watch', 'css', 'html', 'js']);
 
