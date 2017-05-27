@@ -81,7 +81,7 @@ function initThree() {
       y = -5;
       z = 60;
       addLine(x, y, z, i+k);
-      addRing()
+      // addRing();
   }
 }
 
@@ -156,42 +156,51 @@ function render () {
   var amplitude	= sum / (width*256-1);
   radius = 0.1 + amplitude;
 
-  // for (var i = 0; i < this.analyser.frequencyBinCount; i++) {
-  //     var value = freqs[i];
-  //     var percent = value / 256;
-  //     var height = 30 * percent;
-  //     var offset = 30 - height - 1;
-  //     var barWidth = 25/this.analyser.frequencyBinCount;
-  //     var hue = i/this.analyser.frequencyBinCount * 360;
-  //     drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
-  //     drawContext.fillRect(i * barWidth, offset, barWidth, height);
-  //   }
+    // for (var i = 0; i < this.analyser.frequencyBinCount; i++) {
+    //     var value = freqs[i];
+    //     var percent = value / 256;
+    //     var height = 30 * percent;
+    //     var offset = 30 - height - 1;
+    //     var barWidth = 25/this.analyser.frequencyBinCount;
+    //     var hue = i/this.analyser.frequencyBinCount * 360;
+    //     drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
+    //     drawContext.fillRect(i * barWidth, offset, barWidth, height);
+    //   }
 
-  // Moving objects
-	console.log(dataArray);
-  counter+=1 ;
-  scene.traverse(function(e) {
-      if (e.name.substring(0,4) === "sphe") {
-          e.scale.set (radius, radius, radius);
-          e.material.color.setHex(  Math.random() * 0xffffff, Math.random() * 0xffffff, Math.random() * 0xffffff);
+    // console.log(dataArray);
+
+    // Moving objects
+    counter+=1 ;
+  scene.traverse(function(object) {
+      if (object.name.substring(0,4) === "sphe") {
+          object.scale.set (radius, radius, radius);
+          object.material.color.setHex(  Math.random() * 0xffffff, Math.random() * 0xffffff, Math.random() * 0xffffff);
       }
-      if (e.name.substring(0,4) === "cube") {
-          e.rotation.x+=0.1;
-          e.rotation.y+=0.1;
+      if (object.name.substring(0,4) === "cube") {
+          object.rotation.x+=0.1;
+          object.rotation.y+=0.1;
 
-          e.position.z+=e.position.z/30;
-          e.position.x+=e.position.x/30;
-          e.position.y+=e.position.y/30;
+          object.position.z+=object.position.z/30;
+          object.position.x+=object.position.x/30;
+          object.position.y+=object.position.y/30;
 
-          if ((e.position.z>60||e.position.z<-60)||(e.position.x>60||e.position.x<-60)||(e.position.y>60||e.position.y<-60)){
-              scene.remove (e);
+          if ((object.position.z>60||object.position.z<-60)||(object.position.x>60||object.position.x<-60)||(object.position.y>60||object.position.y<-60)){
+              scene.remove (object);
               // renderer.deallocateObject( e );
+          }
+      }
+      if(object.name.substring(0, 4) === "ring"){
+          if(object.position.z>60){
+              scene.remove(object);
+          }else {
+              object.position.z+=0.1;
           }
       }
   });
 
   if (scene.children.length<70){
       if(counter%10==0){
+          addRing();
           addCube();
       }
   }
