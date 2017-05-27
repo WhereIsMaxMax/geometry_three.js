@@ -1,7 +1,7 @@
 var GameController = function (context){
 
     var scene, camera, renderer, stats, controls;
-    var counter = 0, sphereCounter = 0, ringCounter = 0;
+    var counter = 0, chapterCounter = 0, sphereCounter = 0, ringCounter = 0;
     var radius = 0, ringRadius = 20;
 
     audioBufferCreator = new AudioBufferCreator(context);
@@ -40,11 +40,11 @@ var GameController = function (context){
     camera.position.set(0, 0, 60);
     camera.lookAt(scene.position);
 
-    // stats = new Stats();
-    // stats.domElement.style.position = 'absolute';
-    // stats.domElement.style.top = '0px';
-    // stats.domElement.style.zIndex = 100;
-    // document.body.appendChild( stats.domElement );
+    stats = new Stats();
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.top = '0px';
+    stats.domElement.style.zIndex = 100;
+    document.body.appendChild( stats.domElement );
 
     var sphere = addSphere();
 
@@ -119,6 +119,19 @@ var GameController = function (context){
         scene.add (ring);
     }
 
+    this.onSpacePress = (count) => {
+        scene.children = {};
+        switch (count){
+            case 1:
+                initFirstChapter();
+                break;
+        }
+    };
+
+    function initFirstChapter() {
+
+    }
+
     function render () {
         renderer.render(scene, camera);
         requestAnimationFrame(render);
@@ -135,40 +148,51 @@ var GameController = function (context){
         // Moving objects
         counter += 1;
         scene.traverse(function (object) {
-            if (object.name.substring(0, 4) === "sphe") {
-                object.scale.set(radius, radius, radius);
-                object.material.color.setHex(Math.random() * 0xffffff, Math.random() * 0xffffff, Math.random() * 0xffffff);
-            }
-            if (object.name.substring(0, 4) === "cube") {
-                object.rotation.x += 0.1;
-                object.rotation.y += 0.1;
+            switch (chapterCounter) {
+                case 0:
+                    if (object.name.substring(0, 4) === "ring") {
+                        if (object.position.z > 60) {
+                            scene.remove(object);
+                        } else {
+                            object.position.z += 0.1;
+                        }
+                    }
 
-                object.position.z += object.position.z / 30;
-                object.position.x += object.position.x / 30;
-                object.position.y += object.position.y / 30;
+                    if (scene.children.length < 70) {
+                        if (counter % 10 == 0) {
+                            addRing();
+                        }
+                    }
+                    break;
+                case 1:
+                    if (object.name.substring(0, 4) === "sphe") {
+                        object.scale.set(radius, radius, radius);
+                        object.material.color.setHex(Math.random() * 0xffffff, Math.random() * 0xffffff, Math.random() * 0xffffff);
+                    }
+                    if (object.name.substring(0, 4) === "cube") {
+                        object.rotation.x += 0.1;
+                        object.rotation.y += 0.1;
 
-                if ((object.position.z > 60 || object.position.z < -60) || (object.position.x > 60 || object.position.x < -60) || (object.position.y > 60 || object.position.y < -60)) {
-                    scene.remove(object);
-                    // renderer.deallocateObject( e );
-                }
-            }
-            if (object.name.substring(0, 4) === "ring") {
-                if (object.position.z > 60) {
-                    scene.remove(object);
-                } else {
-                    object.position.z += 0.1;
-                }
+                        object.position.z += object.position.z / 30;
+                        object.position.x += object.position.x / 30;
+                        object.position.y += object.position.y / 30;
+
+                        if ((object.position.z > 60 || object.position.z < -60) || (object.position.x > 60 || object.position.x < -60) || (object.position.y > 60 || object.position.y < -60)) {
+                            scene.remove(object);
+                            // renderer.deallocateObject( e );
+                        }
+                    }
+
+                    if (scene.children.length < 70) {
+                        if (counter % 10 == 0) {
+                            addCube();
+                        }
+                    }
+
+                    break;
             }
         });
-
-        if (scene.children.length < 70) {
-            if (counter % 10 == 0) {
-                addRing();
-                addCube();
-            }
-        }
-
-        // stats.update();
+        stats.update();
         controls.update();
     }
 };
