@@ -5,7 +5,7 @@ var AudioBufferCreator = function (context) {
     sourceNode.connect(context.destination);
     sourceNode.connect(analyser);
 
-    loadSound("assets/mp3/song.mp3");
+    loadSound("assets/mp3/2.mp3");
 
     var fFrequencyData = new Float32Array(analyser.frequencyBinCount);
     var bFrequencyData = new Uint8Array(analyser.frequencyBinCount);

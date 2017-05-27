@@ -72,6 +72,35 @@ function initThree() {
   //     }
 
   var sphere = addSphere();
+
+  var lines = [];
+
+  for (i=0; i<24; i++){
+      var k = -12;
+      x = 0;
+      y = -5;
+      z = 60;
+      addLine(x, y, z, i+k);
+      addRing()
+  }
+}
+
+function addLine(x, y, z, i) {
+    // console.log("line_coordinates "+x+" "+y+" "+z+" "+i);
+    var material = new THREE.LineBasicMaterial({
+        color: 0x0000ff
+    });
+
+    var geometry = new THREE.Geometry();
+    geometry.vertices.push(
+        new THREE.Vector3( x+i, y, -60 ),
+        new THREE.Vector3( x+i, y, z )
+    );
+
+    var line = new THREE.Line( geometry, material );
+    scene.add( line );
+    console.log("line "+line.geometry.vertices);
+    return line;
 }
 
 function addCube() {
@@ -105,7 +134,7 @@ function addSphere(){
 }
 
 function addRing(){
-  var ringGeometry = new THREE.RingGeometry(ringRadius, ringRadius+0.2, 100);
+  var ringGeometry = new THREE.RingGeometry(ringRadius, ringRadius+1, 100);
   var ringMaterial = new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff, wireframe: true });
   var ring = new THREE.Mesh(ringGeometry, ringMaterial);
   ring.name = "ring"+ringCounter;
