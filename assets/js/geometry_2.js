@@ -28,7 +28,9 @@
           camera.lookAt(scene.position);
 
           addSphere();
-          addRing();
+
+          var rings = [];
+          rings.push(addRing());
       }
 
       function addLights() {
@@ -80,11 +82,12 @@
           var ringGeometry = new THREE.RingGeometry(ringRadius, ringRadius+5, 100);
           var ringMaterial = new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff, wireframe: true });
           var ring = new THREE.Mesh(ringGeometry, ringMaterial);
-          circleRadius+=3;
+          // circleRadius+=3;
           ring.name = "ring"+ringCounter;
           ringCounter++;
           ring.geometry.dynamic = true;
           scene.add (ring);
+          return ring;
       }
 
       function render() {
