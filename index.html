@@ -28,6 +28,27 @@
     <script src="TrackballControls.js"></script>
     <script src="webaudiox.js"></script>
     <div id="WebGL-output"></div>
+    <script id="vertexShader" type="x-shader/x-vertex">
+      varying vec2 vUv;
+
+      void main()	{
+        vUv = uv;
+
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">
+        varying vec2 vUv;
+
+        void main()	{
+          if ((fract(vUv.x * 10.0) < 0.02) || (fract(vUv.y * 10.0) < 0.02)) {
+            gl_FragColor = vec4(vec3(1.0), 1.0);
+          } else {
+            gl_FragColor = vec4(1.0, 0, 0, 0);
+          }
+        }
+    </script>
     <script id="fragmentShader" type="x-shader/x-fragment">
         uniform float time;
         uniform vec2 resolution;
@@ -38,6 +59,7 @@
         }
     </script>
     <script src="src/init.js"></script>
+    <script src="src/fractal.js"></script>
     <script src="src/add_primitives.js"></script>
     <script src="src/error_handler.js"></script>
     <script src="src/sound_handler.js"></script>

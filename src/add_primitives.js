@@ -18,10 +18,12 @@ function addCube() {
 
 function addSphere() {
     var sphereGeometry = new THREE.SphereGeometry(maxRadius, 20, 25);
-    var sphereMaterial = new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff, wireframe: true });
+    var sphereMaterial = new THREE.ShaderMaterial({
+      vertexShader:   document.getElementById('vertexShader').textContent,
+      fragmentShader: document.getElementById('fragmentShader').textContent
+    });
     var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    // var centerSphere = new THREE.Vector3( 0, 0, 0 );
-    sphere.castShadow = true;
+    // sphere.castShadow = true;
     sphere.name = "spherePlayer" + sphereCounter;
     scene.add(sphere);
     sphere.geometry.dynamic = true;

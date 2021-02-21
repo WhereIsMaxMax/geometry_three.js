@@ -98,7 +98,7 @@ function initThree() {
     // controls.keys = [ 65, 83, 68 ];
     // controls.addEventListener( 'change', render );
 
-    renderer = new THREE.WebGLRenderer({ antialias: false, precision: 'highp' });
+    renderer = new THREE.WebGLRenderer({ antialias: false});
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
@@ -127,13 +127,6 @@ function initThree() {
     stats.domElement.style.top = '0px';
     stats.domElement.style.zIndex = 100;
     document.body.appendChild(stats.domElement);
-
-    // var gui = new dat.GUI();
-    // gui.add(controls, 'rotationSpeed',0,0.5);
-    // gui.add(controls, 'addCube');
-    // gui.add(controls, 'removeCube');
-    // gui.add(controls, 'outputObjects');
-    // gui.add(controls, 'numberOfObjects').listen();
 
     for (i = 0; i < 6; i++) {
         addRing();
