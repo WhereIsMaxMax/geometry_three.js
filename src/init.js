@@ -98,7 +98,7 @@ function initThree() {
     // controls.keys = [ 65, 83, 68 ];
     // controls.addEventListener( 'change', render );
 
-    renderer = new THREE.WebGLRenderer({ antialias: false });
+    renderer = new THREE.WebGLRenderer({ antialias: false, precision: 'highp' });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 

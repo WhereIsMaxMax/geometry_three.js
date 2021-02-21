@@ -2,6 +2,13 @@ var render = function () {
     renderer.render(scene, camera);
     requestAnimationFrame(render);
 
+    // lines.forEach((item) => {
+    //   if (item.position.y <= 500) {
+    //     item.position.y += 0.1;
+    //   } else {
+    //     item.position.y -= 0.1;
+    //   }
+    // });
 
     // radius= 1 + analyser2volume.smoothedValue() * maxRadius
 
@@ -32,6 +39,7 @@ var render = function () {
 
     // Moving objects
     counter += 1;
+
     scene.traverse(function (e) {
 
         var box = new THREE.Box3().setFromObject(e)
