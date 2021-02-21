@@ -64,15 +64,33 @@ function initInputMicrophone() {
         .then(handleSuccess);
 }
 
+function initLight() {
+  var ambientLight;
+  var spotLight;
+  var spotLightBack;
+
+  ambientLight = new THREE.AmbientLight(0x0c0c0c);
+  scene.add(ambientLight);
+
+  spotLight = new THREE.SpotLight(0xffffff);
+  spotLight.position.set(0, 0, 270);
+  spotLight.castShadow = true;
+  scene.add(spotLight);
+
+  spotLightBack = new THREE.SpotLight(0xffffff);
+  spotLightBack.position.set(0, 0, -270);
+  spotLightBack.castShadow = true;
+  scene.add(spotLightBack);
+}
+
 function initThree() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75,
         window.innerWidth / window.innerHeight, 0.1, 1000);
-    controls = new THREE.TrackballControls(camera);
 
+    controls = new THREE.TrackballControls(camera);
     controls.noZoom = false;
     controls.noPan = false;
-
     controls.staticMoving = true;
     controls.dynamicDampingFactor = 0.3;
 
@@ -84,21 +102,7 @@ function initThree() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    var ambientLight = new THREE.AmbientLight(0x0c0c0c);
-    scene.add(ambientLight);
-
-    // var axisHelper = new THREE.AxisHelper( 5 );
-    // scene.add( axisHelper );
-
-    var spotLight = new THREE.SpotLight(0xffffff);
-    spotLight.position.set(0, 0, 270);
-    spotLight.castShadow = true;
-    scene.add(spotLight);
-
-    var spotLightBack = new THREE.SpotLight(0xffffff);
-    spotLightBack.position.set(0, 0, -270);
-    spotLightBack.castShadow = true;
-    scene.add(spotLightBack);
+    initLight();
 
     camera.position.set(0, 0, 60);
     camera.lookAt(scene.position);
@@ -131,8 +135,7 @@ function initThree() {
     // gui.add(controls, 'outputObjects');
     // gui.add(controls, 'numberOfObjects').listen();
 
-
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < 6; i++) {
         addRing();
     }
     addSphere();

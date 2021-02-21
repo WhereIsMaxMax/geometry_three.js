@@ -2,63 +2,43 @@
 ::«All you need is love»::John Lennon
 
 //🙈🙉🙊 todo: 🙈🙉🙊
-//		::write todo
-//		::todo do to do
-//		::tutu
+//	::write todo
+//	::todo do to do
+//	::tutu
 //🙈🙉🙊
 
 //🦎🦎🦎🦎 global variable 🦎🦎🦎🦎
-myVar = my rules
+const myVar = my rules
 //🦎🦎🦎🦎
 
 //🦣🦣🦣🦣 define 🦣🦣🦣🦣
-DEFINE_IV //002fa7
+DEFINE_IV #002fa7
 //🦣🦣🦣🦣
 
 ::examples code::
 
 //🐳🐳🐳🐳class Adon Olam🐳🐳🐳🐳
-class	AdonOlam(ClassParent):
-	//💎comment:: It is pleasant at times to play the madman💎
-	pass
+class	AdonOlam(ClassParent){
+	constructor() {
+		//💎comment:: It is pleasant at times to play the madman💎
+	}
+}
 //🐳🐳🐳🐳
 
-//🐚🐚🐚🐚setup🐚🐚🐚🐚
-	def setup(self):
-		pass
-//🐚🐚🐚🐚
-
 //🐛🐛🐛🐛init🐛🐛🐛🐛
-	def your_init_func(self):
+	function your_init_func() {
 		var = 'war is over!'
+	}
 //🐛🐛🐛🐛
 
-//🐣🐣🐣🐣add childs🐣🐣🐣🐣
-	def all_add_child(self):
-		add_child(Adam)
-		add_child(Eve)
-//🐣🐣🐣🐣
-
-//👹👹👹👹 update 👹👹👹👹
-	def update(self):
-		pass
+//👹👹👹👹 render 👹👹👹👹
+	function render() {
+		// main loop render
+	}
 //👹👹👹👹
 
 //🐙🐙🐙🐙controls🐙🐙🐙🐙
-	def touch_began(self, touch):
-		pass
-	def touch_moved(self, touch):
-		pass
-	def touch_ended(self, touch):
-		pass
+	function mouse_event() {
+		//mouse handler event
+	}
 //🐙🐙🐙🐙
-
-//🦧🦧🦧🦧help function🦧🦧🦧🦧
-	def help_me(self):
-		pass
-//🦧🦧🦧🦧
-
-//📽📽📽📽screen📽📽📽📽
-if __name__ == '__main__':
-	run(Scene())
-//📽📽📽📽
