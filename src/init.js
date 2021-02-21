@@ -1,4 +1,4 @@
-function initGUI() {
+function initSongGUI() {
     var button = document.createElement("button");
     button.innerHTML = "Do Something";
 
@@ -10,7 +10,6 @@ function initGUI() {
     button.addEventListener("click", function () {
         loadSound("song.ogg");
     });
-
 }
 
 function initSong() {
