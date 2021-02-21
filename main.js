@@ -4,7 +4,6 @@
 // :: 
 // 🙈🙉🙊
 
-const player = document.getElementById('player');
 var context;
 var audioBuffer;
 var sourceNode;
@@ -12,7 +11,7 @@ var freqs;
 var times;
 var analyser;
 
-initGUI();
+// initSongGUI();
 // initSong();
 initInputMicrophone();
 
