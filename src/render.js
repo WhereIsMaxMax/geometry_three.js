@@ -5,6 +5,12 @@ var render = function () {
     dataArray = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(dataArray);
 
+    // light rotation
+    var r = 20;
+    spotLight.position.y = r * Math.cos(angle);
+    spotLight.position.z = r * Math.sin(angle);
+    angle += 0.01;
+
     var width = dataArray.length;
     var sum = 0;
     for (var i = 0; i < width; i++) {

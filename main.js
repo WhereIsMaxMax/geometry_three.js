@@ -13,6 +13,8 @@ var processor;
 var aspect = window.innerWidth / window.innerHeight;
 var shapes_array = [];
 var dataArray;
+let spotLight;
+var angle = 10;
 
 
 // initSongGUI();
@@ -30,6 +32,11 @@ for (i = 0; i < 6; i++) {
 }
 addSphere();
 
+let sphereGeometry = new THREE.SphereGeometry(5, 25, 50);
+let sphereMaterial = new THREE.MeshStandardMaterial();
+let sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+sphere.position.x += 10;
+scene.add(sphere);
 
 
 render();

@@ -66,21 +66,15 @@ function initInputMicrophone() {
 
 function initLight() {
   let ambientLight;
-  let spotLight;
-  let spotLightBack;
 
   ambientLight = new THREE.AmbientLight(0x0c0c0c);
   scene.add(ambientLight);
 
-  spotLight = new THREE.SpotLight(0xffffff);
-  spotLight.position.set(0, 0, 270);
+  spotLight = new THREE.SpotLight(0xff00ff);
+  spotLight.position.set(0, 10, 10);
   spotLight.castShadow = true;
   scene.add(spotLight);
 
-  spotLightBack = new THREE.SpotLight(0xffffff);
-  spotLightBack.position.set(0, 0, -270);
-  spotLightBack.castShadow = true;
-  scene.add(spotLightBack);
 }
 
 function initThree() {
