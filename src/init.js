@@ -1,9 +1,9 @@
 function initSongGUI() {
-    var button = document.createElement("button");
+    let button = document.createElement("button");
     button.innerHTML = "Do Something";
 
     // 2. Append somewhere
-    var body = document.getElementsByTagName("body")[0];
+    let body = document.getElementsByTagName("body")[0];
     body.appendChild(button);
 
     // 3. Add event handler
@@ -39,24 +39,25 @@ function initSong() {
 }
 
 function initInputMicrophone() {
-
-    const handleSuccess = function (stream) {
+    const handleSuccess = async function (stream) {
         if (window.URL) {
             player.srcObject = stream;
         } else {
             player.src = stream;
         }
-
         context = new AudioContext();
         const source = context.createMediaStreamSource(stream);
         analyser = context.createAnalyser();
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(dataArray);
+        processor = context.createAnalyser();
         source.connect(analyser);
         source.connect(processor);
-        processor.connect(context.destination);
-        processor.onaudioprocess = function (e) {
-            // Do something with the data, e.g. convert it to WAV
-            console.log(e.inputBuffer);
-        };
+        // processor.connect(context.destination);
+        // processor.onaudioprocess = function (e) {
+        //     // Do something with the data, e.g. convert it to WAV
+        //     console.log(e.inputBuffer);
+        // };
     };
 
     navigator.mediaDevices.getUserMedia({ audio: true, video: false })
@@ -64,9 +65,9 @@ function initInputMicrophone() {
 }
 
 function initLight() {
-  var ambientLight;
-  var spotLight;
-  var spotLightBack;
+  let ambientLight;
+  let spotLight;
+  let spotLightBack;
 
   ambientLight = new THREE.AmbientLight(0x0c0c0c);
   scene.add(ambientLight);
@@ -93,10 +94,6 @@ function initThree() {
     controls.staticMoving = true;
     controls.dynamicDampingFactor = 0.3;
 
-    // ERROR
-    // controls.keys = [ 65, 83, 68 ];
-    // controls.addEventListener( 'change', render );
-
     renderer = new THREE.WebGLRenderer({ antialias: false});
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
@@ -106,29 +103,10 @@ function initThree() {
     camera.position.set(0, 0, 60);
     camera.lookAt(scene.position);
 
-    //         this.removeCube = function() {
-    //       var allChildren = scene.children;
-    //    			var lastObject = allChildren[allChildren.length-1];
-    //             if (lastObject instanceof THREE.Mesh) {
-    //                 scene.remove(lastObject);
-    //                 this.numberOfObjects = scene.children.length;
-    //             }
-    //         }
-
-
-    //         this.outputObjects = function() {
-    //             console.log(scene.children);
-    //         }
-    //     }
-
     stats = new Stats();
     stats.domElement.style.position = 'absolute';
     stats.domElement.style.top = '0px';
     stats.domElement.style.zIndex = 100;
     document.body.appendChild(stats.domElement);
 
-    for (i = 0; i < 6; i++) {
-        addRing();
-    }
-    addSphere();
 }

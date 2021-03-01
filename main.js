@@ -7,9 +7,13 @@
 var context;
 var audioBuffer;
 var sourceNode;
-var freqs;
 var times;
 var analyser;
+var processor;
+var aspect = window.innerWidth / window.innerHeight;
+var shapes_array = [];
+var dataArray;
+
 
 // initSongGUI();
 // initSong();
@@ -21,6 +25,11 @@ var maxRadius = 3, radius = 0, circleRadius = 1;
 
 initThree();
 
-var aspect = window.innerWidth / window.innerHeight;
+for (i = 0; i < 6; i++) {
+    addRing();
+}
+addSphere();
+
+
 
 render();

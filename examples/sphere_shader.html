@@ -13,10 +13,6 @@
 
 <body>
   <div id="container"></div>
-  <input type="file" accept="audio/*" capture>
-  <audio id="player" controls></audio>
-
-  <button class="play">Play</button>
   <script src="../three.min.js"></script>
   <script type="text/javascript" language="JavaScript1.5"
       src="https://rawgit.com/Vasilui/habrahabr/master/WebGL_Three.js/libs/stats.js"></script>
@@ -28,25 +24,47 @@
   <div id="WebGL-output"></div>
 
     <script id="vertexShader" type="x-shader/x-vertex">
-      varying vec2 vUv;
 
-      void main()	{
-        vUv = uv;
-
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
     </script>
 
     <script id="fragmentShader" type="x-shader/x-fragment">
-        varying vec2 vUv;
+      #ifdef GL_ES
+      precision mediump float;
+      #endif
+      uniform float time;
+      uniform vec2 mouse;
+      uniform vec2 resolution;
 
-        void main()	{
-          if ((fract(vUv.x * 10.0) < 0.02) || (fract(vUv.y * 10.0) < 0.02)) {
-            gl_FragColor = vec4(vec3(1.0), 1.0);
-          } else {
-            gl_FragColor = vec4(1.0, 0, 0, 0);
-          }
-        }
+      void main( void ) {
+      	const float span = 5.;
+      	const float r = span / 2.;
+      	vec3 color;
+      	vec2 uv = (gl_FragCoord.xy * 2. - resolution) / resolution.y;
+      	uv *= 250.;
+      	float zt = -9e9;
+      	float zb = 9e9;
+
+      	for (float y = -180.; y <= 180.; y += span) {
+      		float x = (floor(uv.x / span) + .5) * span + y / 2.;
+      		if (abs(x) > 180.) continue;
+
+      		float t = radians(length(vec2(x, y)));
+      		t *= sin(time * .2) * 3.;
+          //		t -= time;
+      		float z = (cos(t) * 100. - cos(t * 3.) * 30.) + y / 2.;
+      		vec2 p = vec2(x - y / 2., z);
+      		float d = distance(uv, p) / r - 1.;
+      		if (d <= 0.) {
+      			if (z < zb || zt < z) {
+      				color = vec3(1, 2, 0) * -d;
+      			}
+      			break;
+      		}
+      		zt = max(zt, z);
+      		zb = min(zb, z);
+      	}
+      	gl_FragColor = vec4(color, 1);
+      }
     </script>
   <script>
     var container;
@@ -57,38 +75,43 @@
 
     var windowHalfX = window.innerWidth / 2;
     var windowHalfY = window.innerHeight / 2;
+    var startTime = Date.now();
+
+    uniforms = {};
+    uniforms.resolution = {type: 'v2', value: new THREE.Vector2(window.innerWidth, window.innerHeight)};
+    uniforms.time = {type: 'f', value: startTime};
+    uniforms.mouse = {type: 'v2', value: new THREE.Vector2()}
+
+    document.onmousemove = function(event) {
+      uniforms.mouse.value.x = event.clientX;
+      uniforms.mouse.value.y = event.clientY;
+    }
 
     init();
-    var startTime = Date.now();
+
     animate();
+
 
     function init() {
       container = document.getElementById('container');
 
       camera = new THREE.PerspectiveCamera(75,
           window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.z = 10;
+      camera.position.z = 20;
       scene = new THREE.Scene();
 
-      // uniforms = {
-      //   time: { type: "f", value: 1.0 },
-      //   resolution: { type: "v2", value: new THREE.Vector2() }
-      // };
-
       material = new THREE.ShaderMaterial({
-        vertexShader: document.getElementById('vertexShader').textContent,
+        uniforms: uniforms,
         fragmentShader: document.getElementById('fragmentShader').textContent
       });
 
-      mesh = new THREE.Mesh(new THREE.SphereGeometry(2, 32, 32), material);
+      mesh = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), material);
       scene.add(mesh);
 
       renderer = new THREE.WebGLRenderer();
       renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
       container.appendChild(renderer.domElement);
 
-      // uniforms.resolution.value.x = window.innerWidth;
-      // uniforms.resolution.value.y = window.innerHeight;
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
@@ -98,6 +121,10 @@
     }
 
     function render() {
+      startTime += 0.005
+      uniforms.time.value = startTime;
+      uniforms.resolution.value.x = window.innerWidth;
+      uniforms.resolution.value.y = window.innerHeight;
       renderer.render(scene, camera);
     }
   </script>

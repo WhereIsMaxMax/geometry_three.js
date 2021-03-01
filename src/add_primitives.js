@@ -1,8 +1,8 @@
 function addCube() {
-    var cubeSize = Math.ceil((Math.random() * 3));
-    var cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-    var cubeMaterial = new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff });
-    var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    let cubeSize = Math.ceil((Math.random() * 3));
+    let cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+    let cubeMaterial = new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff });
+    let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     cube.castShadow = true;
     cube.name = "cube-" + scene.children.length;
 
@@ -13,31 +13,37 @@ function addCube() {
 
     // add the cube to the scene
     scene.add(cube);
-    this.numberOfObjects = scene.children.length;
+    shapes_array.push(cube);
 }
 
+//var for shaders
+let uniforms = {};
+
 function addSphere() {
-    var sphereGeometry = new THREE.SphereGeometry(maxRadius, 20, 25);
-    var sphereMaterial = new THREE.ShaderMaterial({
+    let sphereGeometry = new THREE.SphereGeometry(maxRadius, 20, 25);
+    let sphereMaterial = new THREE.ShaderMaterial({
+      uniforms: uniforms,
       vertexShader:   document.getElementById('vertexShader').textContent,
       fragmentShader: document.getElementById('fragmentShader').textContent
     });
-    var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    let sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     // sphere.castShadow = true;
     sphere.name = "spherePlayer" + sphereCounter;
     scene.add(sphere);
     sphere.geometry.dynamic = true;
     sphereCounter++;
     maxRadius += 5;
+    shapes_array.push(sphere);
 }
 
 function addRing() {
-    var ringGeometry = new THREE.RingGeometry(circleRadius, circleRadius + 0.2, 100);
-    var ringMaterial = new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff, wireframe: true });
-    var ring = new THREE.Mesh(ringGeometry, ringMaterial);
+    let ringGeometry = new THREE.RingGeometry(circleRadius, circleRadius + 0.2, 100);
+    let ringMaterial = new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff, wireframe: true });
+    let ring = new THREE.Mesh(ringGeometry, ringMaterial);
     circleRadius += 3;
     ring.name = "ring" + ringCounter;
     ringCounter++;
     ring.geometry.dynamic = true;
     scene.add(ring);
+    shapes_array.push(ring);
 }

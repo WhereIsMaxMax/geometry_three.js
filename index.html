@@ -34,7 +34,6 @@
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
       }
     </script>
-
     <script id="fragmentShader" type="x-shader/x-fragment">
         varying vec2 vUv;
 
@@ -44,19 +43,11 @@
           } else {
             gl_FragColor = vec4(1.0, 0, 0, 0);
           }
-        }
-    </script>
-    <script id="fragmentShader" type="x-shader/x-fragment">
-        uniform float time;
-        uniform vec2 resolution;
-        void main()	{
-            float x = mod(time + gl_FragCoord.x, 20.) < 10. ? 1. : 0.;
-            float y = mod(time + gl_FragCoord.y, 20.) < 10. ? 1. : 0.;
-            gl_FragColor = vec4(vec3(min(x, y)), 1.);
+
         }
     </script>
     <script src="src/init.js"></script>
-    <script src="src/fractal.js"></script>
+    <!-- <script src="src/fractal.js"></script> -->
     <script src="src/add_primitives.js"></script>
     <script src="src/error_handler.js"></script>
     <script src="src/sound_handler.js"></script>

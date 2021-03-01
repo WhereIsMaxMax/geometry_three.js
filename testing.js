@@ -44,7 +44,7 @@ function animate() {
   }
 
   controls.update();
-   renderer.render( scene, camera );
-   requestAnimationFrame( animate );
+  renderer.render( scene, camera );
+  requestAnimationFrame( animate );
 }
 animate();
